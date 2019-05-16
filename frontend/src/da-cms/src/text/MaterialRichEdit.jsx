@@ -76,27 +76,27 @@ class MaterialRichEdit extends React.Component {
           <ToggleButton value="strikethrough">
             <StrikethroughS/>
           </ToggleButton>
-          <ToggleButton value="color">
+        </ToggleButtonGroup>
+        <ToggleButtonGroup>
+        <ToggleButton value="color">
             <FormatColorFillIcon />
             <ArrowDropDownIcon />
           </ToggleButton>
-        </ToggleButtonGroup>
-        <ToggleButtonGroup>
-          <ToggleButton>
+          <ToggleButton value="bulleted" >
             <FormatListBulletedRounded/>
           </ToggleButton>
-          <ToggleButton>
+          <ToggleButton value="numbered" >
             <FormatListNumbered/>
           </ToggleButton>
         </ToggleButtonGroup>
         <ToggleButtonGroup>
-          <ToggleButton>
+          <ToggleButton value="link" >
             <Link/>
           </ToggleButton>
-          <ToggleButton>
+          <ToggleButton value="image" >
             <Image/>
           </ToggleButton>
-          <ToggleButton>
+          <ToggleButton value="video" >
             <Videocam/>
           </ToggleButton>
         </ToggleButtonGroup>

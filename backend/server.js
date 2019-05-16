@@ -1,13 +1,19 @@
 const express = require('express'),
-  path = require('path')
+  {pagePath, contentPath} = require('./paths'),
+  routes = require('./routing')
 
-const app = express(),
-  staticPath = path.join(__dirname, './../frontend/dist')
+const app = express()
 
-app.use(express.static(staticPath))
-app.get('*', (req, res) => {
-  res.sendFile(path.join(staticPath, 'index.html'))
-})
+// Development dependencies 
+const morgan = require('morgan')
+app.use(morgan('tiny'))
 
-// eslint-disable-next-line no-console
+// Static directories
+app.use(express.static(pagePath))
+// app.use('/content', express.static(contentPath))
+
+app.use('/', routes)
+
 app.listen(3000, () => console.log('http://localhost:3000/'))
+
+module.exports = {pagePath, contentPath}

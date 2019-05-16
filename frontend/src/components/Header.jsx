@@ -1,49 +1,69 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
+import ReactDOM from 'react-dom'
+ReactDOM.render(<Login ref={(loginForm) => {window.loginForm = loginForm.handleOpen}} />, document.getElementById('login'))
+
+import { Context } from './../da-cms/src/main/Main'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import { Link } from 'react-router-dom'
+import Switch from '@material-ui/core/Switch'
+import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { value: props.selected }
-    this.handleChange = this.handleChange.bind(this)
+import Login from './Login'
+// import {MultiClick} from './../helper'
+// import { logout } from '../da-cms/src/main/content'
+
+const Header = props => {
+  // const fiveClicks = new MultiClick(loginSecret, {clicks: 4})
+  const [tabs, setTabs] = useState({value: props.selected})
+  const context = useContext(Context)
+
+  // const loginSecret = () => {
+  //   window.loginForm()
+  // }
+
+  const tabChange = (event, value) => {
+    setTabs({value});
   }
 
-  handleChange(event, value) {
-    this.setState({ value });
+  const handleEditable = ({target}) => {
+    context.dispatch({type: 
+      target.checked ? 'login' : 'logout'
+    })
   }
 
-  render() {
-    return (
-      <AppBar position="sticky" color="primary">
-        <Toolbar style={{justifyContent: 'center'}}>
-        <Tabs
-          value={this.state.value}
-          onChange={this.handleChange}
-          indicatorColor="secondary"
-          centered
-        >
-          {this.props.pages.map(
-            (page, index) => {return (
-              <Tab
-                key={index}
-                value={index}
-                label={page.name}
-                component={Link}
-                to={page.id}
-              />
-            )}
-          )}
-        </Tabs>
-        </Toolbar>
-      </AppBar>
-    )
-  }
+  return (
+    <AppBar position="sticky" color="primary">
+      
+      <Toolbar style={{justifyContent: 'center'}}>
+      <Tabs
+        value={tabs.value}
+        onChange={tabChange}
+        indicatorColor="secondary"
+        centered
+      >
+        {props.pages.map(
+          (page, index) => (
+            <Tab
+              key={index}
+              value={index}
+              label={page.name}
+              component={Link}
+              to={page.id}
+            />
+          )
+        )}
+      </Tabs>
+      <Switch
+        checked={context.state.editable}
+        onChange={handleEditable}
+      />
+      </Toolbar>
+    </AppBar>
+  )
 }
 
 Header.propTypes = {

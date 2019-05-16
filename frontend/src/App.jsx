@@ -1,10 +1,13 @@
 import React, { Suspense } from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // Components
 import Header from './components/Header'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Loading from './components/Loading'
+import SaveButton from './components/SaveButton'
+
+import Main from './da-cms/src/main/Main'
 
 // Theming
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
@@ -17,44 +20,33 @@ const styles = theme => (
   {
     app: {
       backgroundColor: theme.palette.background.default,
-      // backgroundColor: 'theme.palette.background.default',
+      height: '100vh'
     }
   }
 )
 
-const centeredProgress = (
-  <div style = {
-    {
-      position: 'fixed',
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }
-  }>
-    <CircularProgress
-      size={60}
-      thickness={5}
-    />
-  </div>
-)
+const save = () => <div>save</div>
 
 const App = (props) => {
   return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-      <div className={props.classes.app}>
-        <Header pages={pages} selected={selectedTab}/>
-        <Suspense fallback={centeredProgress}>
-          <Route path="/" exact component={pages[selectedTab].render} />
-          {pages.map((page, index) => {
-            return <Route key={index} path={`/${page.id}`} component={page.render} />
-          })}
-        </Suspense>
-      </div>
-    </BrowserRouter>
-    </MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+        <div className={props.classes.app}>
+          <Main saveButton={save} loading={Loading}>
+            <Header pages={pages} selected={selectedTab}/>
+              <Suspense fallback={<Loading/>}>
+                <Switch>
+                  <Route path="/" exact component={pages[selectedTab].render} />
+                  {pages.map((page, index) => {
+                    return <Route key={index} path={`/${page.id}`} component={page.render} />
+                  })}
+                </Switch>
+              </Suspense>
+              <SaveButton/>
+            </Main>
+        </div>
+      </BrowserRouter>
+      </MuiThemeProvider>
   )
 }
 

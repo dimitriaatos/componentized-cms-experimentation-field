@@ -9,14 +9,15 @@ const htmlPlugin = new HtmlWebPackPlugin({
 
 module.exports = {
   mode: 'development',
-  // devtool: 'source-map',
+  devtool: 'source-map',
   watch: true,
-  entry: path.resolve(__dirname, 'src') + '/index.jsx',
+  entry: path.resolve(__dirname, 'src/index.jsx'),
   output: {
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
   },
-  module: {
+  module: { 
     rules: [
       {
         test: /\.(js|jsx)$/,
@@ -24,14 +25,11 @@ module.exports = {
         include: path.resolve(__dirname, 'src'),
         loader: 'babel-loader',
         options: { babelrc: true },
-        // options: {
-        //   presets: ['@babel/react', '@babel/env']
-        // }
       },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader'
-      }
+      // {
+      //   test: /\.css$/,
+      //   loader: 'style-loader!css-loader'
+      // }
     ]
   },
   resolve: {

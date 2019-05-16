@@ -24,7 +24,6 @@
     "eslint-config-google": "^0.12.0",
     "eslint-plugin-react": "^7.12.4",
     "html-webpack-plugin": "^3.2.0",
-    "source-map-explorer": "^1.7.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.29.4",
     "webpack-cli": "^3.2.3"
@@ -37,10 +36,16 @@
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "^3.0.0-alpha.30",
+    "deep-object-diff": "^1.1.0",
     "draft-js": "^0.10.5",
+    "draft-js-export-html": "^1.3.3",
+    "draft-js-import-html": "^1.3.3",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
-    "react-router-dom": "^4.3.1"
+    "react-html-parser": "^2.0.2",
+    "react-redux": "^6.0.1",
+    "react-router-dom": "^4.3.1",
+    "url-safe-string": "^1.1.0"
   }
 }

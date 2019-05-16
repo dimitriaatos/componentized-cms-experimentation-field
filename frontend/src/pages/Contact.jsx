@@ -5,13 +5,12 @@ import { withStyles } from '@material-ui/core';
 import PropTypes from 'prop-types'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+// import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import {
     faGithub,
     faFacebook,
     faTwitter,
     faFacebookMessenger,
-    faSkype,
     faInstagram,
     faLinkedin
 } from '@fortawesome/free-brands-svg-icons'
@@ -46,12 +45,10 @@ const styles = theme => (
 )
 
 const icons = [  
-    {icon: faEnvelope, link: 'mailto:dimitriaatos@gmail.com'},
     {icon: faGithub, link: 'https://github.com/dimitriaatos/'},
     {icon: faFacebook, link: 'https://www.facebook.com/dimitris.aatos'},
     {icon: faTwitter, link: 'https://twitter.com/DimitriAatos'},
     {icon: faFacebookMessenger, link: 'https://www.messenger.com/t/dimitris.aatos'},
-    {icon: faSkype, link: 'skype:dimitris.ellinas'},
     {icon: faInstagram, link: 'https://www.instagram.com/dimitriaatos/'},
     {icon: faLinkedin, link: 'https://www.linkedin.com/in/dimitri-aatos-ellinas-183842137/'},
 ]
