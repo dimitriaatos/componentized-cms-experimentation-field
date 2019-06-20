@@ -1,6 +1,6 @@
 const path = require('path')
 
 const pagePath = path.join(__dirname, './../frontend/dist'),
-  contentPath = path.join(__dirname, './content')
+  imagesPath = path.join(__dirname, './images')
 
-  module.exports = {pagePath, contentPath}
+module.exports = {pagePath, imagesPath}

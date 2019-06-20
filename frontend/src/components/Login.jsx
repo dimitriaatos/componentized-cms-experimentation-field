@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {useState} from 'react'
 import TextField from '@material-ui/core/TextField'
 
 import Dialog from '@material-ui/core/Dialog'
@@ -9,79 +9,77 @@ import Button from '@material-ui/core/Button'
 import { server } from './../da-cms/src/index'
 import Loading from './../components/Loading'
 
-class Login extends Component {
-  state = {
+const Login = props => {
+  const [state, setState] = useState({
     open: false,
     cred: {},
     loading: false,
-  }
+  }),
 
   handleOpen = () => {
-    this.setState({ open: true })
-  }
+    setState({ open: true })
+  },
 
   handleClose = () => {
-    this.setState({ open: false })
-  }
+    setState({ open: false })
+  },
 
   submit = () => {
-    this.setState({loading: true})
-    server.login(this.state.cred).then(
+    setState({loading: true})
+    server.login(state.cred).then(
       () => {
-        this.setState({loading: false})
-        this.handleClose()
+        setState({loading: false})
+        handleClose()
       }
     )
-  }
+  },
 
-  updateInput({target}) {
+  updateInput = ({target}) => {
     const cred = {}
     cred[target.id] = target.value
-    this.setState({cred: Object.assign({}, this.state.cred, cred)})
-  }
+    setState({cred: Object.assign({}, state.cred, cred)})
+  },
 
-  pressEnter(event){
-    if (event.keyCode == 13) this.submit()
+  pressEnter = (event) => {
+    if (event.keyCode == 13) submit()
   }
   
-  render() {
-    if (this.state.loading) {
-      return <Loading/>
-    } else {
-      return (
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-        >
-          <DialogContent>
-            <TextField
-              label="Username"
-              id="username"
-              // value={this.state.cred.username}
-              onChange={event => this.updateInput(event)}
-              onKeyDown={event => this.pressEnter(event)}
-              autoFocus
-              required
-              fullWidth/>
-            <TextField
-              type="password"
-              label="Password"
-              id="password"
-              // value={this.state.cred.password}
-              onChange={event => this.updateInput(event)}
-              onKeyDown={event => this.pressEnter(event)}
-              autoComplete="current-password"
-              required
-              fullWidth/>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.submit} color="primary">
-              Log in
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )
-    }
+  if (state.loading) {
+    return <Loading/>
+  } else {
+    return (
+      <Dialog
+        open={state.open}
+        onClose={handleClose}
+      >
+        <DialogContent>
+          <TextField
+            label="Username"
+            id="username"
+            // value={state.cred.username}
+            onChange={updateInput}
+            onKeyDown={pressEnter}
+            autoFocus
+            required
+            fullWidth/>
+          <TextField
+            type="password"
+            label="Password"
+            id="password"
+            // value={state.cred.password}
+            onChange={updateInput}
+            onKeyDown={pressEnter}
+            autoComplete="current-password"
+            required
+            fullWidth/>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={submit} color="primary">
+            Log in
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
   }
 }
 

@@ -1,30 +1,25 @@
-import detailedDiff from 'deep-object-diff/dist/detailed'
+// import detailedDiff from 'deep-object-diff/dist/detailed'
 import {useEffect, useRef, useState, useContext} from 'react'
 import {server, Context} from './Main'
 
+const isSingle = array => array.length == 1 ? true : false
+
 /**
  * A custom hook for making editable CMS components
- * @param {String} path The path for component's content
- * @param {function} get A callback to execute before saving the content (optional)
- * @return {Array} [content, setContent]
  */
   
-const useContent = (path, get) => {
-  const [content, setContent] = useState([])
-  const [init, setInit] = useState([])
-  const context = useContext(Context)
-  const sendRef = useRef()
-  const contentRef = useRef()
-  const initRef = useRef()
+const usePath = ({path}, stateInit) => {
+  const [content, setContent] = useState(stateInit ? stateInit : []),
+    [init, setInit] = useState([]),
+    context = useContext(Context),
+    sendRef = useRef(),
+    contentRef = useRef(),
+    initRef = useRef()
 
   const send = () => {
-    if (get) setContent(get())
     context.dispatch({
-      type: 'save',
-      content: init.map(document => ({
-        ...document,
-        content: detailedDiff(initRef.current.content, contentRef.current)
-      })),
+      type: 'store',
+      content: contentRef.current,
       path
     })
   }
@@ -37,9 +32,11 @@ const useContent = (path, get) => {
   }, [content, init])
 
   const setStorage = data => {
-    setContent(data.length == 1 ? data[0].content : data)
+    setContent(data)
     setInit(data)
   }
+
+  const handleArray = data => isSingle(data) ? data[0].content : {all: data, changed: [], removed: []}
 
   useEffect(() => {
     // send reference for content to context
@@ -47,16 +44,23 @@ const useContent = (path, get) => {
     // fetch content if not already loaded and send to context (global) and content (local)
     if (!context.state.content[path]) {
       server.get(path)
-      .then(data => {return data.json()})
-      .then(setStorage)
+      .then(data => data.json())
+      .then(data => {
+        setStorage(handleArray(data))
+      })
     } else {
       setStorage(context.state.content[path])
     }
     // send content to main when component is detached (route detaches components)
     return send
   }, [])
-
-  return [content, setContent]
+  return [content, setContent, init]
 }
+
+const useContent = (options, stateInit) => (
+  options.path ?
+  usePath(options, stateInit) :
+  [...useState(options.content ? options.content : stateInit), stateInit]
+)
 
 export { useContent }

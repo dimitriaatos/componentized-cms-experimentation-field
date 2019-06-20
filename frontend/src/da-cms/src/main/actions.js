@@ -1,6 +1,6 @@
 import server from './content'
 
-export default (state, dispatch) => ({
+export default ({state, dispatch}) => ({
   ...server,
   login: (cred) => {
     server.login(cred)

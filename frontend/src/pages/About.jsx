@@ -1,26 +1,27 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import withStyles from '@material-ui/core/styles/withStyles'
+// import PropTypes from 'prop-types'
+import makeStyles from '@material-ui/styles/makeStyles'
 import { Text } from './../da-cms/src/index'
 
 // import Loading from './../components/Loading'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     container: {
         maxWidth: theme.breakpoints.values.sm,
         margin: 'auto',
     }
-})
+}))
 
-const About = (props) => (
-    <div className={props.classes.container} >
-        <h1>About</h1>
-        <Text path="personal/about" />
-    </div>
-)
-
-About.propTypes = {
-    classes: PropTypes.object.isRequired,
+const About = props => {
+    const classes = useStyles()
+    return (
+        <div className={classes.container} >
+            <Text path="personal/about" placeholder="about" />
+        </div>
+    )
 }
 
-export default withStyles(styles)(About)
+About.propTypes = {
+}
+
+export default About

@@ -1,6 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import React, {useState} from 'react'
 
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter'
@@ -21,92 +19,85 @@ import Videocam from '@material-ui/icons/Videocam'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
 
-const styles = theme => ({
+import makeStyles from '@material-ui/styles/makeStyles'
+
+const useStyles = makeStyles(theme => ({
   toggleContainer: {
     height: 56,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    margin: `${theme.spacing.unit}px 0`,
+    margin: `${theme.spacing(1)}px 0`,
     background: theme.palette.background.default,
   },
-})
+}))
 
-class MaterialRichEdit extends React.Component {
-  state = {
+const MaterialRichEdit = props => {
+  const [state, setState] = useState({
     alignment: 'left',
     formats: ['bold'],
-  }
+  }),
+  classes = useStyles()
 
-  handleFormat = (event, formats) => this.setState({ formats })
+  const handleFormat = (event, formats) => setState({ formats }),
+  handleAlignment = (event, alignment) => setState({ alignment })
 
-  handleAlignment = (event, alignment) => this.setState({ alignment })
-
-  render() {
-    const { classes } = this.props
-    const { alignment, formats } = this.state
-
-    return (
-      <div className={classes.toggleContainer}>
-        <ToggleButtonGroup value={alignment} exclusive onChange={this.handleAlignment}>
-          <ToggleButton value="left">
-            <FormatAlignLeftIcon />
-          </ToggleButton>
-          <ToggleButton value="center">
-            <FormatAlignCenterIcon />
-          </ToggleButton>
-          <ToggleButton value="right">
-            <FormatAlignRightIcon />
-          </ToggleButton>
-          <ToggleButton value="justify">
-            <FormatAlignJustifyIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <ToggleButtonGroup value={formats} onChange={this.handleFormat}>
-          <ToggleButton value="bold">
-            <FormatBoldIcon />
-          </ToggleButton>
-          <ToggleButton value="italic">
-            <FormatItalicIcon />
-          </ToggleButton>
-          <ToggleButton value="underlined">
-            <FormatUnderlinedIcon />
-          </ToggleButton>
-          <ToggleButton value="strikethrough">
-            <StrikethroughS/>
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <ToggleButtonGroup>
-        <ToggleButton value="color">
-            <FormatColorFillIcon />
-            <ArrowDropDownIcon />
-          </ToggleButton>
-          <ToggleButton value="bulleted" >
-            <FormatListBulletedRounded/>
-          </ToggleButton>
-          <ToggleButton value="numbered" >
-            <FormatListNumbered/>
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <ToggleButtonGroup>
-          <ToggleButton value="link" >
-            <Link/>
-          </ToggleButton>
-          <ToggleButton value="image" >
-            <Image/>
-          </ToggleButton>
-          <ToggleButton value="video" >
-            <Videocam/>
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </div>
-    )
-  }
+  return (
+    <div className={classes.toggleContainer}>
+      <ToggleButtonGroup value={state.alignment} exclusive onChange={handleAlignment}>
+        <ToggleButton value="left">
+          <FormatAlignLeftIcon />
+        </ToggleButton>
+        <ToggleButton value="center">
+          <FormatAlignCenterIcon />
+        </ToggleButton>
+        <ToggleButton value="right">
+          <FormatAlignRightIcon />
+        </ToggleButton>
+        <ToggleButton value="justify">
+          <FormatAlignJustifyIcon />
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup value={state.formats} onChange={handleFormat}>
+        <ToggleButton value="bold">
+          <FormatBoldIcon />
+        </ToggleButton>
+        <ToggleButton value="italic">
+          <FormatItalicIcon />
+        </ToggleButton>
+        <ToggleButton value="underlined">
+          <FormatUnderlinedIcon />
+        </ToggleButton>
+        <ToggleButton value="strikethrough">
+          <StrikethroughS/>
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup>
+      <ToggleButton value="color">
+          <FormatColorFillIcon />
+          <ArrowDropDownIcon />
+        </ToggleButton>
+        <ToggleButton value="bulleted" >
+          <FormatListBulletedRounded/>
+        </ToggleButton>
+        <ToggleButton value="numbered" >
+          <FormatListNumbered/>
+        </ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup>
+        <ToggleButton value="link" >
+          <Link/>
+        </ToggleButton>
+        <ToggleButton value="image" >
+          <Image/>
+        </ToggleButton>
+        <ToggleButton value="video" >
+          <Videocam/>
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </div>
+  )
 }
 
-MaterialRichEdit.propTypes = {
-  classes: PropTypes.object.isRequired,
-}
-
-export default withStyles(styles)(MaterialRichEdit)
+export default MaterialRichEdit

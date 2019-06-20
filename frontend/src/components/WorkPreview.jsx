@@ -1,21 +1,22 @@
-import React, {Fragment, useState} from 'react'
+import React, { useState, useContext } from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import ButtonBase from '@material-ui/core/ButtonBase'
-import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types'
 import Modal from '@material-ui/core/Modal'
-// import TextEditable from './TextEditable'
+import CloseIcon from '@material-ui/icons/Close'
+import IconButton from '@material-ui/core/IconButton'
+// import Fab from '@material-ui/core/Fab'
 import Work from './Work'
-import {parser, infoParser} from './../helper'
+import makeStyles from '@material-ui/styles/makeStyles'
+import {parser, infoParser, makeTitle} from './../helper'
+import { Context } from './../da-cms/src/main/Main'
+import { editablePropsCreator } from '../helper';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   button: {
-    marginBottom: theme.spacing.unit,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginBottom: theme.spacing(1),
     width: '100%',
-    maxWidth: theme.breakpoints.values.sm,
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: theme.typography.fontSize,
@@ -61,87 +62,105 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  modal: {
+  remove: {
     position: 'absolute',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    outline: 'none',
-    top: '10%',
-    bottom: '10%',
-    left: '10%',
-    right: '10%',
+    right: 2,
+    top: 2,
+    zIndex: 1,
   },
-})
+  container: {
+    position: 'relative',
+  },
+}))
 
 const WorkPreview = props => {
-  const [state, setState] = useState(false)
+  const [openState, setOpenState] = useState(props.content.path ? props.match.params.work == props.content.path : false),
+    context = useContext(Context),
+    open = state => () => {
+      if (props.content.path) props.history.push(`/portfolio${state ? '/' + props.content.path : ''}`)
+      setOpenState(state)
+    },
+    handleChange = data => {
+      props.onChange(data, props.index)
+    },
+    classes = useStyles()
 
-  const makeTitle = name => name.charAt(0).toUpperCase() + name.slice(1)
-
-  const handleOpen = () => {
-    setState(true)
-  }
-
-  const handleClose = () => {
-    setState(false)
-  }
-
-  const prev = {
-    title: 0,
-    by: parser.and,
-    date: parser.date,
-    type: 0,
-  }
-
-  const {classes} = props,
-    {type, ...previewInfo} = infoParser(props.info, prev)
-
+    const meta = (content, infoType) => {
+      const model = {
+        preview: {
+          title: 0,
+          by: parser.and,
+          date: parser.date,
+        },
+        type: {
+          type: 0,
+        },
+      }
+      const editableProps = editablePropsCreator(handleChange)
+    
+      return infoParser(content, model[infoType], editableProps)
+    }
+  
   return (
-    <Fragment>
+    <div className={classes.container}>
+      {
+        context.state.editable ?
+        <IconButton className={classes.remove} onClick={() => props.remove(props.index)} >
+          <CloseIcon/>
+        </IconButton> :
+        null
+      }
       <ButtonBase
         focusVisibleClassName={classes.buttonFocusVisible}
         classes={{root: classes.button}}
         type="button"
-        onClick={handleOpen}
+        onClick={open(true)}
       >
         <Card className={classes.card}>
           <CardContent className={classes.cardContent}>
             <table className={classes.table}>
               <tbody>
                 {
-                  Object.keys(previewInfo).map((key, index) => (
-                    <tr key={index}>
-                      <td className={classes.leftColumn}>{makeTitle(key)}</td>
-                      <td className={classes.rightColumn}>{previewInfo[key]}</td>
-                    </tr>
-                  ))
+                  Object.entries(meta(props.content, 'preview')).map(([key, value], index) => {
+                    return (
+                      <tr key={index}>
+                        <td className={classes.leftColumn}>{makeTitle(key)}</td>
+                        <td className={classes.rightColumn}>
+                          {value}
+                        </td>
+                      </tr>
+                    )
+                  })
                 }
               </tbody>
             </table>
-            {
-              props.editable ?
-              <input className={classes.sideInfo} type="text" name="type" id="type"/> :
-              <div className={classes.sideInfo}>{type}</div>
-            }
+            <div className={classes.sideInfo} >
+              {meta(props.content, 'type').type}
+            </div>
           </CardContent>
         </Card>
       </ButtonBase>
-      <Modal open={state} onClose={handleClose}>
-      <div className={classes.modal}>
-        <Work info={props.info} editable={props.editable} />
-      </div>
+      <Modal open={openState} onClose={open(false)}>
+        <>
+          <Work
+            content={props.content}
+            onChange={handleChange}
+            close={open(false)}
+            meta={{...meta(props.content, 'preview'), type: meta(props.content, 'type').type}}
+          />
+        </>
       </Modal>
-    </Fragment>
+    </div>
   )
 }
 
 WorkPreview.propTypes = {
-  classes: PropTypes.object.isRequired,
-  info: PropTypes.object.isRequired,
-  editable: PropTypes.bool
+  content: PropTypes.object.isRequired,
+  onChange: PropTypes.func,
+  index: PropTypes.number,
+  remove: PropTypes.func,
+  match: PropTypes.object,
+  history: PropTypes.object,
 }
 
-export default withStyles(styles)(WorkPreview)
-
-{/* <List component={Editable} editable={true} name="" /> */}
+export default WorkPreview

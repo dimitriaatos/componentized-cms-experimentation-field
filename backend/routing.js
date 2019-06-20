@@ -15,20 +15,20 @@ const user = {
 
 // Body parser
 router.use(bodyParser.urlencoded({extended: false}))
-router.use(bodyParser.text())
+router.use(bodyParser.json())
 
 const secretkey = 'secretkey'
 
 const parseToken = (req, res, next) => {
-  const bearerHeader = req.headers.authorization
-  // console.log(bearerHeader);
+  // const bearerHeader = req.headers.authorization
   
-  if (!h.isUndefined(bearerHeader)) {
-    req.token = bearerHeader.split(' ')[1]
-    next()
-  } else {
-    res.sendStatus(403)
-  }
+  // if (!h.isUndefined(bearerHeader)) {
+  //   req.token = bearerHeader.split(' ')[1]
+  //   next()
+  // } else {
+  //   res.sendStatus(403)
+  // }
+  next()
 }
 
 const verifyToken = (req, res, next) => {
@@ -45,8 +45,8 @@ const createToken = (length = 22) => {
 
 router.put('/content', parseToken, verifyToken, (req, res) => {
   save(req.body)
-  .then(() => {res.sendStatus(200)})
-  .catch(() => {res.sendStatus(502)})
+  // .then(() => {res.sendStatus(200)})
+  // .catch(() => {res.sendStatus(502)})
 })
 
 router.get('/content/:collection/:field', asyncHandler(
@@ -83,6 +83,7 @@ router.post('/login', (req, res) => {
 
 router.get('*', (req, res) => {
   res.sendFile(path.join(pagePath, 'index.html'))
+  console.log('send index.html')
 })
 
 module.exports = router

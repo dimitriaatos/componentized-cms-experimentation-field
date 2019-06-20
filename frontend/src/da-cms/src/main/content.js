@@ -32,12 +32,13 @@ const authFetch = async (path = '', options = {}) => {
   )
 }
 
-const save = async (content) => {
+const save = async content => {
   const headers = new Headers()
-  headers.set('Content-Type', 'text/plain')
+  // headers.set('Content-Type', 'text/plain')
+  headers.set('Content-Type', 'application/json')
   return await authFetch(
     'content',
-    {headers, method: 'PUT', body: content}
+    {headers, method: 'PUT', body: JSON.stringify(content)}
   )
 }
 

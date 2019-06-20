@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useContext } from 'react'
 import PropTypes from 'prop-types'
 import server from './content'
 import { useContent } from './useContent'
@@ -14,7 +14,7 @@ const initialContext = {
 const Context = React.createContext({state: initialContext})
 
 const reducer = (state, action) => {
-  
+  // action.type == 'store' ? console.log(action.content) : null
   switch (action.type) {
     case 'subscribe':
       return { ...state, components: {...state.components, [action.path]: action.save } }
@@ -22,7 +22,7 @@ const reducer = (state, action) => {
       return { ...state, editable: true }
     case 'logout':
       return { ...state, editable: false }
-    case 'save':
+    case 'store':
       return { ...state, content: {...state.content, [action.path]: action.content} }
     default:
       return state
@@ -34,6 +34,7 @@ let Loading
 const Main = props => {
   Loading = props.loading
   const [state, dispatch] = useReducer(reducer, initialContext)
+  window.con = useContext(Context)
 
   return (
     <Context.Provider value={{state, dispatch}}>
@@ -44,10 +45,15 @@ const Main = props => {
 
 Main.propTypes = {
   children: PropTypes.node,
-  saveButton: PropTypes.func.isRequired,
   loading: PropTypes.func,
   adapter: PropTypes.object,
 }
 
+const contentProps = {
+  path: PropTypes.string,
+  content: PropTypes.any,
+  onChange: PropTypes.func,
+}
+
 export default Main
-export { Main, Context, Loading, server, useContent, actions }
+export { Main, Context, Loading, server, useContent, actions, contentProps }

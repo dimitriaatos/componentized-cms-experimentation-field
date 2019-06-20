@@ -1,7 +1,7 @@
 import React from 'react'
 import dtheme from './../theme'
 import ButtonBase from '@material-ui/core/ButtonBase'
-import { withStyles } from '@material-ui/core';
+import makeStyles from '@material-ui/styles/makeStyles'
 import PropTypes from 'prop-types'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,7 +15,7 @@ import {
     faLinkedin
 } from '@fortawesome/free-brands-svg-icons'
 
-const styles = theme => (
+const useStyles = makeStyles(theme => (
     {
         main: {
             position: 'fixed',
@@ -25,39 +25,36 @@ const styles = theme => (
             backgroundColor: 'inherit',
         },
         contactContainer: {
-            marginTop: theme.spacing.unit * 4,
-            backgroundColor: theme.palette.primary,
+            marginTop: theme.spacing(2),
+            backgroundColor: theme.palette.secondary,
             display: 'flex',
             justifyContent: 'center',
             flexWrap: 'wrap',
         },
         button: {
-            margin: theme.spacing.unit,
-            color: theme.palette.primary.main,
+            margin: theme.spacing(1),
+            color: theme.palette.secondary.dark,
             '&:hover': {
-                color: theme.palette.primary.dark,
+                color: theme.palette.secondary.main,
             },
         },
         buttonFocusVisible: {
-            color: theme.palette.primary.dark,
+            color: theme.palette.secondary.main,
         },
     }
-)
+))
 
 const icons = [  
-    {icon: faGithub, link: 'https://github.com/dimitriaatos/'},
-    {icon: faFacebook, link: 'https://www.facebook.com/dimitris.aatos'},
-    {icon: faTwitter, link: 'https://twitter.com/DimitriAatos'},
-    {icon: faFacebookMessenger, link: 'https://www.messenger.com/t/dimitris.aatos'},
-    {icon: faInstagram, link: 'https://www.instagram.com/dimitriaatos/'},
-    {icon: faLinkedin, link: 'https://www.linkedin.com/in/dimitri-aatos-ellinas-183842137/'},
+
 ]
 
 // eslint-disable-next-line no-useless-escape
 const url = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
 
-const Contact = (props) => {
-    const {classes} = props
+// const getLink = 
+
+const Contact = props => {
+    const classes = useStyles()
     return (
         <main className={classes.main} >
             <div className={classes.contactContainer}>
@@ -71,6 +68,7 @@ const Contact = (props) => {
                                 focusVisible: classes.buttonFocusVisible,
                             }}
                             href={icon.link}
+                            // onClick={getLink}
                             target={url.test(icon.link) ? '_blank' : ''}
                         >
                             <FontAwesomeIcon icon={icon.icon} size={dtheme.iconSize} />
@@ -83,8 +81,7 @@ const Contact = (props) => {
 }
 
 Contact.propTypes = {
-    classes: PropTypes.object,
     icons: PropTypes.array,
 }
 
-export default withStyles(styles)(Contact)
+export default Contact

@@ -1,5 +1,5 @@
 const express = require('express'),
-  {pagePath, contentPath} = require('./paths'),
+  {pagePath, imagesPath} = require('./paths'),
   routes = require('./routing')
 
 const app = express()
@@ -10,10 +10,10 @@ app.use(morgan('tiny'))
 
 // Static directories
 app.use(express.static(pagePath))
-// app.use('/content', express.static(contentPath))
+app.use('/images', express.static(imagesPath))
 
 app.use('/', routes)
 
 app.listen(3000, () => console.log('http://localhost:3000/'))
 
-module.exports = {pagePath, contentPath}
+module.exports = {pagePath, imagesPath}

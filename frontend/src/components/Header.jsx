@@ -4,29 +4,49 @@ ReactDOM.render(<Login ref={(loginForm) => {window.loginForm = loginForm.handleO
 
 import { Context } from './../da-cms/src/main/Main'
 
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Switch from '@material-ui/core/Switch'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
+import makeStyles from '@material-ui/styles/makeStyles'
 
 import Login from './Login'
+import Typography from '@material-ui/core/Typography'
 // import {MultiClick} from './../helper'
 // import { logout } from '../da-cms/src/main/content'
 
+const useStyles = makeStyles(theme => ({
+  header: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing(1),
+  },
+  image: {
+    width: '72px',
+    height: '72px',
+  },
+  nav: {
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.appBar,
+    backgroundColor: theme.palette.background.default,
+  },
+}))
+
 const Header = props => {
   // const fiveClicks = new MultiClick(loginSecret, {clicks: 4})
-  const [tabs, setTabs] = useState({value: props.selected})
+  const [tabs, setTabs] = useState(props.selected)
   const context = useContext(Context)
+  const classes = useStyles()
 
   // const loginSecret = () => {
   //   window.loginForm()
   // }
 
   const tabChange = (event, value) => {
-    setTabs({value});
+    setTabs(value)
   }
 
   const handleEditable = ({target}) => {
@@ -36,39 +56,43 @@ const Header = props => {
   }
 
   return (
-    <AppBar position="sticky" color="primary">
-      
-      <Toolbar style={{justifyContent: 'center'}}>
+    <>
+    <header className={classes.header} >
+      <img className={classes.image} src="images/manifest/icon-72x72.png" alt="Dimitri Aatos Ellinas" />
+      <Typography component="h2" >Dimitri Aatos Ellinas</Typography>
+      <Switch
+        checked={context.state.editable}
+        onChange={handleEditable}
+      />
+    </header>
+    <nav className={classes.nav}>
       <Tabs
-        value={tabs.value}
+        value={tabs}
         onChange={tabChange}
-        indicatorColor="secondary"
+        indicatorColor="primary"
         centered
       >
         {props.pages.map(
           (page, index) => (
             <Tab
+              disableRipple={true}
               key={index}
               value={index}
               label={page.name}
               component={Link}
-              to={page.id}
+              to={page.path}
             />
           )
         )}
       </Tabs>
-      <Switch
-        checked={context.state.editable}
-        onChange={handleEditable}
-      />
-      </Toolbar>
-    </AppBar>
+    </nav>
+    </>
   )
 }
 
 Header.propTypes = {
   pages: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
+    path: PropTypes.string,
     name: PropTypes.string,
     render: PropTypes.object
   })),
